@@ -1,18 +1,18 @@
-import { Router } from 'express';
+import { FastifyInstance } from 'fastify';
 
 import * as userController from '../controllers/user.controller';
 import { authenticate } from '../middlewares/authenticate';
 import { validate } from '../middlewares/validate';
-import { updateUserValidation, userIdValidation } from '../validators/user.validators';
+import { updateUserSchema, userIdSchema } from '../validators/user.validators';
 
-const router = Router();
+const userRoutes = async (app: FastifyInstance): Promise<void> => {
+  // All user routes require authentication
+  app.addHook('preHandler', authenticate);
 
-// All user routes require authentication
-router.use(authenticate);
+  app.get('/', userController.getUsers);
+  app.get('/:id', { preHandler: validate(userIdSchema) }, userController.getUser);
+  app.patch('/:id', { preHandler: validate(updateUserSchema) }, userController.updateUser);
+  app.delete('/:id', { preHandler: validate(userIdSchema) }, userController.deleteUser);
+};
 
-router.get('/', userController.getUsers);
-router.get('/:id', validate(userIdValidation), userController.getUser);
-router.patch('/:id', validate(updateUserValidation), userController.updateUser);
-router.delete('/:id', validate(userIdValidation), userController.deleteUser);
-
-export default router;
+export default userRoutes;

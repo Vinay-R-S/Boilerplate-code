@@ -1,4 +1,4 @@
-# Client — React + TypeScript + Tailwind CSS Boilerplate
+# Client - React + TypeScript + Tailwind CSS Boilerplate
 
 Production-ready frontend following the **Airbnb JavaScript Style Guide**.
 
@@ -23,7 +23,7 @@ Production-ready frontend following the **Airbnb JavaScript Style Guide**.
 
 ```
 src/
-├── App.tsx                  # Root component — mounts providers
+├── App.tsx                  # Root component - mounts providers
 ├── main.tsx                 # Entry point
 ├── vite-env.d.ts            # Vite env type declarations
 │
@@ -40,7 +40,7 @@ src/
 │   └── format.ts            # Date/string formatting helpers
 │
 ├── lib/
-│   └── apiClient.ts         # Axios instance — JWT attach + 401 redirect
+│   └── apiClient.ts         # Axios instance - JWT attach + 401 redirect
 │
 ├── services/                # Raw API calls (one file per resource)
 │   ├── auth.service.ts
@@ -110,9 +110,9 @@ npm run preview
 
 ## Architecture Decisions
 
-- **Feature-sliced structure** — `features/` holds code that belongs to a specific domain (auth schemas, user logic). `components/ui/` holds primitives that belong to no feature.
-- **Services → Hooks → Pages** — raw `axios` calls live in `services/`, wrapped in `react-query` hooks in `hooks/`, consumed in `pages/`. Pages stay thin.
-- **Zod + React Hook Form** — schema-first validation; the same Zod schema validates both the form client-side and can be reused server-side.
-- **`cn()` utility** — `clsx` handles conditional class logic; `tailwind-merge` resolves conflicting Tailwind classes (e.g. `px-4` vs `px-6` → only `px-6` wins).
-- **Tailwind v4** — uses the new `@tailwindcss/vite` plugin; no `tailwind.config.js` needed for basic usage.
-- **ESLint stays on v8** — `eslint-config-airbnb` only supports ESLint 7 or 8. ESLint 10 is not yet supported.
+- **Feature-sliced structure** - `features/` holds code that belongs to a specific domain (auth schemas, user logic). `components/ui/` holds primitives that belong to no feature.
+- **Services → Hooks → Pages** - raw `axios` calls live in `services/`, wrapped in `react-query` hooks in `hooks/`, consumed in `pages/`. Pages stay thin.
+- **Zod + React Hook Form** - schema-first validation; the same Zod schema validates both the form client-side and can be reused server-side.
+- **`cn()` utility** - `clsx` handles conditional class logic; `tailwind-merge` resolves conflicting Tailwind classes (e.g. `px-4` vs `px-6` → only `px-6` wins).
+- **Tailwind v4** - uses the new `@tailwindcss/vite` plugin; no `tailwind.config.js` needed for basic usage.
+- **ESLint stays on v8** - `eslint-config-airbnb` only supports ESLint 7 or 8. ESLint 10 is not yet supported.

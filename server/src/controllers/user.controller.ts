@@ -1,33 +1,49 @@
-import { Request, Response } from 'express';
+import { FastifyReply, FastifyRequest } from 'fastify';
 
 import * as userService from '../services/user.service';
 import { sendNoContent, sendSuccess } from '../utils/apiResponse';
 import catchAsync from '../utils/catchAsync';
 
-export const getUsers = catchAsync(async (req: Request, res: Response): Promise<void> => {
-  const page = Number(req.query['page']) || 1;
-  const limit = Number(req.query['limit']) || 10;
+interface IdParams {
+  id: string;
+}
 
-  const result = await userService.getAllUsers({ page, limit });
+interface PaginationQuery {
+  page?: string;
+  limit?: string;
+}
 
-  sendSuccess(res, result.rows, 'Users fetched', 200, {
+type UpdateBody = Parameters<typeof userService.updateUser>[1];
+
+export const getUsers = catchAsync(async (req: FastifyRequest, reply: FastifyReply): Promise<void> => {
+  const { page, limit } = req.query as PaginationQuery;
+
+  const result = await userService.getAllUsers({
+    page: Number(page) || 1,
+    limit: Number(limit) || 10,
+  });
+
+  sendSuccess(reply, result.rows, 'Users fetched', 200, {
     total: result.count,
     totalPages: result.totalPages,
     currentPage: result.currentPage,
   });
 });
 
-export const getUser = catchAsync(async (req: Request, res: Response): Promise<void> => {
-  const user = await userService.getUserById(Number(req.params['id']));
-  sendSuccess(res, user, 'User fetched');
+export const getUser = catchAsync(async (req: FastifyRequest, reply: FastifyReply): Promise<void> => {
+  const { id } = req.params as IdParams;
+  const user = await userService.getUserById(Number(id));
+  sendSuccess(reply, user, 'User fetched');
 });
 
-export const updateUser = catchAsync(async (req: Request, res: Response): Promise<void> => {
-  const user = await userService.updateUser(Number(req.params['id']), req.body);
-  sendSuccess(res, user, 'User updated');
+export const updateUser = catchAsync(async (req: FastifyRequest, reply: FastifyReply): Promise<void> => {
+  const { id } = req.params as IdParams;
+  const user = await userService.updateUser(Number(id), req.body as UpdateBody);
+  sendSuccess(reply, user, 'User updated');
 });
 
-export const deleteUser = catchAsync(async (req: Request, res: Response): Promise<void> => {
-  await userService.deleteUser(Number(req.params['id']));
-  sendNoContent(res);
+export const deleteUser = catchAsync(async (req: FastifyRequest, reply: FastifyReply): Promise<void> => {
+  const { id } = req.params as IdParams;
+  await userService.deleteUser(Number(id));
+  sendNoContent(reply);
 });

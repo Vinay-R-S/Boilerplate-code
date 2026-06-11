@@ -1,26 +1,35 @@
-import { body, param } from 'express-validator';
+import { z } from 'zod';
 
-export const updateUserValidation = [
-  param('id')
-    .isInt({ min: 1 })
-    .withMessage('User ID must be a positive integer'),
+export const updateUserSchema = {
+  params: z.object({
+    id: z
+      .string()
+      .regex(/^\d+$/, 'User ID must be a positive integer')
+      .refine((val) => parseInt(val, 10) >= 1, 'User ID must be a positive integer'),
+  }),
 
-  body('name')
-    .optional()
-    .trim()
-    .isLength({ min: 2, max: 100 })
-    .withMessage('Name must be between 2 and 100 characters'),
+  body: z.object({
+    name: z
+      .string()
+      .trim()
+      .min(2, 'Name must be between 2 and 100 characters')
+      .max(100, 'Name must be between 2 and 100 characters')
+      .optional(),
 
-  body('email')
-    .optional()
-    .trim()
-    .isEmail()
-    .withMessage('Must be a valid email address')
-    .normalizeEmail(),
-];
+    email: z
+      .string()
+      .trim()
+      .email('Must be a valid email address')
+      .toLowerCase()
+      .optional(),
+  }),
+};
 
-export const userIdValidation = [
-  param('id')
-    .isInt({ min: 1 })
-    .withMessage('User ID must be a positive integer'),
-];
+export const userIdSchema = {
+  params: z.object({
+    id: z
+      .string()
+      .regex(/^\d+$/, 'User ID must be a positive integer')
+      .refine((val) => parseInt(val, 10) >= 1, 'User ID must be a positive integer'),
+  }),
+};

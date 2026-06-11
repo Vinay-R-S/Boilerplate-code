@@ -1,9 +1,9 @@
-import { NextFunction, Request, Response } from 'express';
+import { FastifyReply, FastifyRequest } from 'fastify';
 import { StatusCodes } from 'http-status-codes';
 import jwt from 'jsonwebtoken';
 
 import { env } from '../config/env';
-import '../types'; // loads global Express.Request augmentation
+import '../types'; // loads global FastifyRequest augmentation
 import { AppError } from '../utils/AppError';
 
 interface DecodedToken {
@@ -13,7 +13,7 @@ interface DecodedToken {
   exp: number;
 }
 
-export const authenticate = (req: Request, _res: Response, next: NextFunction): void => {
+export const authenticate = async (req: FastifyRequest, _reply: FastifyReply): Promise<void> => {
   const authHeader = req.headers.authorization;
 
   if (!authHeader?.startsWith('Bearer ')) {
@@ -21,7 +21,6 @@ export const authenticate = (req: Request, _res: Response, next: NextFunction): 
   }
 
   const token = authHeader.split(' ')[1];
-  const decoded = jwt.verify(token, env.JWT_SECRET) as DecodedToken;
+  const decoded = jwt.verify(token as string, env.JWT_SECRET) as DecodedToken;
   req.user = decoded;
-  next();
 };

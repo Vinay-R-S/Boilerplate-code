@@ -1,42 +1,51 @@
-import compression from 'compression';
-import cors from 'cors';
-import express, { Application } from 'express';
-import helmet from 'helmet';
-import morgan from 'morgan';
+import fastifyCompress from '@fastify/compress';
+import fastifyCors from '@fastify/cors';
+import fastifyHelmet from '@fastify/helmet';
+import fastify, { FastifyInstance } from 'fastify';
 
 import { env } from './config/env';
+import logger from './config/logger';
 import { errorHandler } from './middlewares/errorHandler';
 import { notFound } from './middlewares/notFound';
 import { rateLimiter } from './middlewares/rateLimiter';
 import routes from './routes';
 
-const app: Application = express();
+const buildApp = async (): Promise<FastifyInstance> => {
+  const app = fastify({
+    logger: false,
+    bodyLimit: 10 * 1024,
+  });
 
-// ─── Security ─────────────────────────────────────────────────────────────────
-app.use(helmet());
-app.use(
-  cors({
+  // Security
+  await app.register(fastifyHelmet);
+  await app.register(fastifyCors, {
     origin: env.CORS_ORIGIN,
     credentials: true,
-  }),
-);
-app.use(rateLimiter);
+  });
+  await app.register(rateLimiter);
 
-// ─── Request Parsing ──────────────────────────────────────────────────────────
-app.use(express.json({ limit: '10kb' }));
-app.use(express.urlencoded({ extended: true, limit: '10kb' }));
-app.use(compression());
+  // Compression
+  await app.register(fastifyCompress);
 
-// ─── Logging ──────────────────────────────────────────────────────────────────
-if (env.NODE_ENV !== 'test') {
-  app.use(morgan(env.NODE_ENV === 'development' ? 'dev' : 'combined'));
-}
+  // Request logging
+  if (env.NODE_ENV !== 'test') {
+    app.addHook('onResponse', async (req, reply) => {
+      const line =
+        env.NODE_ENV === 'development'
+          ? `${req.method} ${req.url} ${reply.statusCode}`
+          : `${req.ip} - "${req.method} ${req.url} HTTP/${req.raw.httpVersion}" ${reply.statusCode}`;
+      logger.info(line);
+    });
+  }
 
-// ─── Routes ───────────────────────────────────────────────────────────────────
-app.use('/api/v1', routes);
+  // Routes
+  await app.register(routes, { prefix: '/api/v1' });
 
-// ─── Error Handling ───────────────────────────────────────────────────────────
-app.use(notFound);
-app.use(errorHandler);
+  // Error handling
+  app.setErrorHandler(errorHandler);
+  app.setNotFoundHandler(notFound);
 
-export default app;
+  return app;
+};
+
+export default buildApp;

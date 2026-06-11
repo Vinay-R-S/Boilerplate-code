@@ -1,14 +1,12 @@
-import { NextFunction, Request, Response } from 'express';
+import { FastifyReply, FastifyRequest } from 'fastify';
 
-type AsyncHandler = (req: Request, res: Response, next: NextFunction) => Promise<void>;
+type AsyncHandler = (req: FastifyRequest, reply: FastifyReply) => Promise<void>;
 
 /**
- * Wraps an async route handler so unhandled promise rejections
- * are automatically forwarded to Express error middleware.
+ * In Fastify, async route handlers natively forward unhandled rejections to
+ * the global error handler. This wrapper is kept for structural parity and
+ * acts as a transparent passthrough.
  */
-const catchAsync = (fn: AsyncHandler) =>
-  (req: Request, res: Response, next: NextFunction): void => {
-    Promise.resolve(fn(req, res, next)).catch(next);
-  };
+const catchAsync = (fn: AsyncHandler): AsyncHandler => fn;
 
 export default catchAsync;

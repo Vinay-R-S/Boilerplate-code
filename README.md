@@ -1,12 +1,12 @@
 # MyApp - Full-Stack Boilerplate
 
-Express + TypeScript + MySQL · React + TypeScript + Tailwind CSS
+Fastify + TypeScript + MySQL · React + TypeScript + Tailwind CSS
 
 ```
 myapp/
-├── server/               ← Express API (Node.js + TypeScript + Sequelize)
-├── client/               ← React SPA (Vite + TypeScript + Tailwind v4)
-└── docker-compose.yml    ← Local MySQL + Adminer
+├── server/               <- Fastify API (Node.js + TypeScript + Sequelize)
+├── client/               <- React SPA (Vite + TypeScript + Tailwind v4)
+└── docker-compose.yml    <- Local MySQL + Adminer
 ```
 
 ## Prerequisites
@@ -53,7 +53,7 @@ npm run dev
 
 Client runs on **http://localhost:5173**
 
-The Vite dev server automatically proxies `/api` → `http://localhost:3000`.
+The Vite dev server automatically proxies `/api` to `http://localhost:3000`.
 
 ## Available Scripts
 
@@ -101,7 +101,7 @@ Base URL: `http://localhost:3000/api/v1`
 ### Health
 
 ```
-GET /api/v1/health → { success: true, message: "Server is healthy" }
+GET /api/v1/health -> { success: true, message: "Server is healthy" }
 ```
 
 ## Tech Stack
@@ -110,15 +110,15 @@ GET /api/v1/health → { success: true, message: "Server is healthy" }
 
 | | Package | Version |
 |---|---|---|
-| Runtime | Node.js | ≥ 20 |
-| Framework | Express | 5.x |
+| Runtime | Node.js | >= 20 |
+| Framework | Fastify | 5.x |
 | Language | TypeScript | 6.x |
 | ORM | Sequelize + sequelize-typescript | 6.x / 2.x |
 | Database | MySQL 2 | 3.x |
 | Auth | jsonwebtoken + bcryptjs | 9.x / 3.x |
-| Validation | express-validator | 7.x |
+| Validation | Zod | 3.x |
 | Logging | Winston | 3.x |
-| Security | Helmet, CORS, rate-limit | latest |
+| Security | @fastify/helmet, @fastify/cors, @fastify/rate-limit | latest |
 
 ### Client
 

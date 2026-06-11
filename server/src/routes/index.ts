@@ -1,16 +1,16 @@
-import { Request, Response, Router } from 'express';
+import { FastifyInstance } from 'fastify';
 
 import authRoutes from './auth.routes';
 import userRoutes from './user.routes';
 
-const router = Router();
+const routes = async (app: FastifyInstance): Promise<void> => {
+  // Health check
+  app.get('/health', async (_req, reply) => {
+    await reply.send({ success: true, message: 'Server is healthy', timestamp: new Date().toISOString() });
+  });
 
-// Health check
-router.get('/health', (_req: Request, res: Response) => {
-  res.json({ success: true, message: 'Server is healthy', timestamp: new Date().toISOString() });
-});
+  await app.register(authRoutes, { prefix: '/auth' });
+  await app.register(userRoutes, { prefix: '/users' });
+};
 
-router.use('/auth', authRoutes);
-router.use('/users', userRoutes);
-
-export default router;
+export default routes;

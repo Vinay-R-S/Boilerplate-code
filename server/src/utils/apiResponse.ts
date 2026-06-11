@@ -1,4 +1,4 @@
-import { Response } from 'express';
+import { FastifyReply } from 'fastify';
 import { StatusCodes } from 'http-status-codes';
 
 interface ApiResponse<T> {
@@ -9,25 +9,26 @@ interface ApiResponse<T> {
 }
 
 export const sendSuccess = <T>(
-  res: Response,
+  reply: FastifyReply,
   data: T,
   message = 'Success',
   statusCode = StatusCodes.OK,
   meta?: Record<string, unknown>,
-): Response<ApiResponse<T>> =>
-  res.status(statusCode).json({
+): void => {
+  void reply.status(statusCode).send({
     success: true,
     message,
     data,
     ...(meta && { meta }),
-  });
+  } satisfies ApiResponse<T>);
+};
 
 export const sendCreated = <T>(
-  res: Response,
+  reply: FastifyReply,
   data: T,
   message = 'Created successfully',
-): Response<ApiResponse<T>> =>
-  sendSuccess(res, data, message, StatusCodes.CREATED);
+): void => sendSuccess(reply, data, message, StatusCodes.CREATED);
 
-export const sendNoContent = (res: Response): Response =>
-  res.status(StatusCodes.NO_CONTENT).send();
+export const sendNoContent = (reply: FastifyReply): void => {
+  void reply.status(StatusCodes.NO_CONTENT).send();
+};

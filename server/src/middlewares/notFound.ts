@@ -1,8 +1,8 @@
-import { NextFunction, Request, Response } from 'express';
+import { FastifyReply, FastifyRequest } from 'fastify';
 import { StatusCodes } from 'http-status-codes';
 
 import { AppError } from '../utils/AppError';
 
-export const notFound = (req: Request, _res: Response, next: NextFunction): void => {
-  next(new AppError(`Route not found: ${req.originalUrl}`, StatusCodes.NOT_FOUND));
+export const notFound = (req: FastifyRequest, _reply: FastifyReply): void => {
+  throw new AppError(`Route not found: ${req.url}`, StatusCodes.NOT_FOUND);
 };

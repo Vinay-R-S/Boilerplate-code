@@ -1,37 +1,38 @@
-import { body } from 'express-validator';
+import { z } from 'zod';
 
-export const registerValidation = [
-  body('name')
-    .trim()
-    .notEmpty()
-    .withMessage('Name is required')
-    .isLength({ min: 2, max: 100 })
-    .withMessage('Name must be between 2 and 100 characters'),
+export const registerSchema = {
+  body: z.object({
+    name: z
+      .string({ required_error: 'Name is required' })
+      .trim()
+      .min(2, 'Name must be between 2 and 100 characters')
+      .max(100, 'Name must be between 2 and 100 characters'),
 
-  body('email')
-    .trim()
-    .notEmpty()
-    .withMessage('Email is required')
-    .isEmail()
-    .withMessage('Must be a valid email address')
-    .normalizeEmail(),
+    email: z
+      .string({ required_error: 'Email is required' })
+      .trim()
+      .email('Must be a valid email address')
+      .toLowerCase(),
 
-  body('password')
-    .notEmpty()
-    .withMessage('Password is required')
-    .isLength({ min: 8 })
-    .withMessage('Password must be at least 8 characters')
-    .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/)
-    .withMessage('Password must contain uppercase, lowercase, and a number'),
-];
+    password: z
+      .string({ required_error: 'Password is required' })
+      .min(8, 'Password must be at least 8 characters')
+      .regex(
+        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/,
+        'Password must contain uppercase, lowercase, and a number',
+      ),
+  }),
+};
 
-export const loginValidation = [
-  body('email')
-    .trim()
-    .notEmpty()
-    .withMessage('Email is required')
-    .isEmail()
-    .withMessage('Must be a valid email address'),
+export const loginSchema = {
+  body: z.object({
+    email: z
+      .string({ required_error: 'Email is required' })
+      .trim()
+      .email('Must be a valid email address'),
 
-  body('password').notEmpty().withMessage('Password is required'),
-];
+    password: z
+      .string({ required_error: 'Password is required' })
+      .min(1, 'Password is required'),
+  }),
+};
