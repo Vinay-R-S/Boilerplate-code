@@ -1,0 +1,39 @@
+# Build output
+server/dist/
+client/dist/
+
+# Dependencies
+node_modules/
+server/node_modules/
+client/node_modules/
+
+# Logs
+*.log
+logs/
+npm-debug.log*
+
+# Lock files
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Coverage and cache
+coverage/
+.cache/
+
+# Environment (never read actual secrets)
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+# .env.example is OK to read - keep it unignored
+
+# IDE and OS
+.DS_Store
+Thumbs.db
+
+# Generated files
+*.min.js
+*.min.css
+*.map

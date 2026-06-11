@@ -1,9 +1,9 @@
-# MyApp - Full-Stack Boilerplate
+# AdvisorKhoj-CRM - Full-Stack Boilerplate
 
 Fastify + TypeScript + MySQL · React + TypeScript + Tailwind CSS
 
 ```
-myapp/
+advisorkhoj-crm/
 ├── server/               <- Fastify API (Node.js + TypeScript + Sequelize)
 ├── client/               <- React SPA (Vite + TypeScript + Tailwind v4)
 └── docker-compose.yml    <- Local MySQL + Adminer

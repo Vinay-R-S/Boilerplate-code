@@ -1,4 +1,4 @@
-export const APP_NAME = import.meta.env.VITE_APP_NAME ?? 'MyApp';
+export const APP_NAME = import.meta.env.VITE_APP_NAME ?? 'AdvisorKhoj-CRM';
 
 export const ROUTES = {
   HOME: '/',

@@ -1,5 +1,5 @@
 {
-  "name": "client",
+  "name": "advisorkhoj-crm-client",
   "version": "1.0.0",
   "description": "React + TypeScript + Tailwind CSS frontend",
   "private": true,

@@ -1,5 +1,5 @@
 {
-  "name": "server",
+  "name": "advisorkhoj-crm-server",
   "version": "1.0.0",
   "description": "Fastify + TypeScript + MySQL backend server",
   "main": "dist/index.js",
